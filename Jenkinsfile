@@ -6,6 +6,7 @@ pipeline {
           steps {
            git credentialsId: 'github-cred', url: 'https://github.com/demodevops2/java-hello-world-webapp.git'
     }
+        }
           
            stage("Maven build"){
               steps {
@@ -13,7 +14,7 @@ pipeline {
               }
            }
            
-}
+
 
 
 
