@@ -8,7 +8,7 @@ pipeline {
     }
           
            stage("Maven build"){
-              stpes {
+              steps {
                echo "build src code"
               }
            }
