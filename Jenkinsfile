@@ -1,33 +1,28 @@
-pipeline {
-   agent {label 'slave01'}
-    stages {
-      stage("Git checkout"){
-        steps{
-         git credentialsId: 'github-cred', url: 'https://github.com/demodevops2/java-hello-world-webapp.git'
+ 
+ pipeline {
+   agent any
+   stages{ 
+     stage("Git checkout") {
+     steps{
+          git 'https://github.com/demodevops2/java-hello-world-webapp.git'
+          }
+     }
+
+     stage("Build stage") {
+     steps{
+           sh 'mvn clean package'
+           sh 'mv target/*.war target/myweb.war'
+          }
+     
+     }
+
+     stage("war file deploy"){
+     steps{
+     sshagent(['ec2-tomcat-cred-id']) {
+        sh "scp -o StrictHostKeyChecking=no target/myweb.war ubuntu@172.31.7.110:/var/lib/tomcat8/webapps"
         }
+     }
+     }
 
       }
-      
-      stage("java build stage"){
-        steps{
-          sh 'mvn clean package'  
-          sh 'mv target/*.war target/myweb.war'
-        }
-
-      }
-       
-      stage("war file deploy"){
-      steps{
-      sshagent(['slave-id']) {
-      sh "scp -o StrictHostKeyChecking=no target/myweb.war ubuntu@172.31.12.74:/var/lib/tomcat8/webapps"
-      }
-        
-           
-        }
-
-      }
-
-
-
-    } 
-}    
+}
